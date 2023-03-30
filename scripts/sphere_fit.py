@@ -9,14 +9,13 @@ from robot_vision_lectures.msg import SphereParams
 
 xyz = XYZarray()
 sphere_params = SphereParams()
-print(sphere_params)
 computed = False
 
 def solver(data):
 
 	global computed
-	global xyz
-	global sphere_params
+	#global points
+	#global sphere_params
 	
 	points = data.points
 	
@@ -26,15 +25,12 @@ def solver(data):
 	
 	# iterate over points and add to matrices for xyz
 	for i in range (len(points)):
-		if i == 0:
-			print(points[i].x,points[i].y,points[i].z)
 		A2 = []
 		A2.append(2*points[i].x)
 		A2.append(2*points[i].y)
 		A2.append(2*points[i].z)
 		A2.append(1)
 		A.append(A2)
-		#A.append([2*points[i].x, 2*points[i].y, 2*points[i].z, 1])
 		B.append(points[i].x**2 + points[i].y**2 + points[i].z**2)
 	
 	# calculate P
@@ -42,12 +38,12 @@ def solver(data):
 	
 	# calculate radius
 	r = np.sqrt(P[0]**2 + P[1]**2 + P[2]**2 + P[3])
-	print(r)
 	
 	# assign values to sphere data 
 	sphere_params.xc = P[0]
 	sphere_params.yc = P[1]
 	sphere_params.zc = P[2]
+	sphere_params.radius = r
 	
 	# set flag to True
 	computed = True
@@ -68,5 +64,5 @@ if __name__ == '__main__':
 		if computed:
 			img_pub.publish(sphere_params)
 			computed = False 
-		# pause until the next iteration			
+		#pause until the next iteration			
 		rate.sleep()
