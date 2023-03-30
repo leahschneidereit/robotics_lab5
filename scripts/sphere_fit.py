@@ -14,8 +14,6 @@ computed = False
 def solver(data):
 
 	global computed
-	#global points
-	#global sphere_params
 	
 	points = data.points
 	
